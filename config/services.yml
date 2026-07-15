@@ -27,3 +27,9 @@ services:
       - '@axelweb.awdbcleaner.form.general_form_data_provider'
       - 'Axelweb\AwDbCleaner\Form\GeneralFormType'
       - 'AwDbCleaner'
+
+  # CLI command
+  axelweb.awdbcleaner.command.clean_database:
+    class: 'Axelweb\AwDbCleaner\Command\CleanDatabaseCommand'
+    tags:
+      - { name: console.command }
