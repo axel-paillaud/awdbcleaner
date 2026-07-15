@@ -48,7 +48,6 @@ class AwDbCleaner extends Module
         }
 
         $installed = parent::install()
-            && $this->installDb()
             && $this->registerHook('actionFrontControllerSetMedia')
             && Configuration::updateValue('AWDBCLEANER_SAMPLE_CONFIG', '');
 
@@ -64,22 +63,7 @@ class AwDbCleaner extends Module
     public function uninstall(): bool
     {
         return parent::uninstall()
-            && Configuration::deleteByName('AWDBCLEANER_SAMPLE_CONFIG')
-            && $this->uninstallDb();
-    }
-
-    protected function installDb(): bool
-    {
-        $file = __DIR__ . '/sql/install.php';
-
-        return is_file($file) ? (bool) require $file : false;
-    }
-
-    protected function uninstallDb(): bool
-    {
-        $file = __DIR__ . '/sql/uninstall.php';
-
-        return is_file($file) ? (bool) require $file : false;
+            && Configuration::deleteByName('AWDBCLEANER_SAMPLE_CONFIG');
     }
 
     /**
