@@ -1,6 +1,8 @@
-# AwDbCleaner
+# DB Cleaner (awdbcleaner)
 
-A modern boilerplate for PrestaShop 8 / 9 module development, by [Axelweb](https://axelweb.fr).
+A PrestaShop 8 module that truncates statistics tables via a Symfony CLI command, by [Axelweb](https://axelweb.fr).
+
+Over time, tables like `ps_connections`, `ps_guest` and `ps_page_viewed` can grow to millions of rows, slowing down the database. This module provides a single console command to clean them up.
 
 ## Requirements
 
@@ -8,177 +10,53 @@ A modern boilerplate for PrestaShop 8 / 9 module development, by [Axelweb](https
 - PHP 8.1+
 - Composer
 
-## Getting started
+## Installation
 
-1. Copy this module and rename it (folder, main PHP file, class name, namespace, service IDs, route names).
+1. Copy the module to `modules/awdbcleaner/`.
 2. Run `composer install` in the module directory.
 3. Install the module from the PrestaShop back-office.
 
----
+## CLI usage
 
-## Features
+```bash
+# Truncate all default tables
+php bin/console prestashop:awdbcleaner:clean
 
-### Back-office tab
+# Dry run — see what would be truncated without executing
+php bin/console prestashop:awdbcleaner:clean --dry-run
 
-A menu tab is automatically registered in the back-office on install via the `$tabs` property in the main class.
+# Truncate only specific tables (without prefix)
+php bin/console prestashop:awdbcleaner:clean --tables=connections,guest
 
-```php
-public $tabs = [
-    [
-        'name'              => ['en' => 'Module Base', 'fr' => 'Module Base'],
-        'class_name'        => 'AwDbCleaner',
-        'parent_class_name' => 'AdminParentModulesSf',
-        'wording'           => 'Module Base',
-        'wording_domain'    => 'Modules.Awdbcleaner.Admin',
-    ],
-];
+# Combine options
+php bin/console prestashop:awdbcleaner:clean --tables=connections,connections_source --dry-run
 ```
 
-- Change `name` to set the label shown in the menu.
-- Change `parent_class_name` to move the tab to a different menu section (e.g. `AdminCatalog`, `AdminOrders`).
-- Remove the `$tabs` property entirely if you do not need a menu entry.
+### Default tables
 
-The tab links to the Symfony route `awdbcleaner_index` (`/awdbcleaner/index`), handled by `AwDbCleanerController`.
-
----
-
-### Configuration page
-
-The module redirects `getContent()` to a Symfony-based configuration page at `/awdbcleaner/configuration`.
-
-The stack follows PrestaShop's modern form pattern:
-
-| File | Role |
+| Table | Description |
 |---|---|
-| `src/Form/GeneralFormType.php` | Symfony form definition (fields) |
-| `src/Form/GeneralDataConfiguration.php` | Read/write values to `ps_configuration` |
-| `src/Form/GeneralFormDataProvider.php` | Glue between form and data configuration |
-| `src/Controller/AdminConfigurationController.php` | Renders and handles the form |
-| `views/templates/admin/form.html.twig` | Twig template for the form |
+| `connections` | Visitor connection records |
+| `connections_source` | Traffic source for each connection |
+| `guest` | Guest visitor tracking |
+| `page_viewed` | Page view statistics |
+| `pagenotfound` | 404 error logs |
 
-A sample field `AWDBCLEANER_SAMPLE_CONFIG` is included as a starting point. Add, rename, or remove fields in `GeneralFormType` and `GeneralDataConfiguration`.
+## Cron setup
 
----
+Schedule the command to run monthly (e.g. 1st of each month at 3:00 AM):
 
-### SQL tables
-
-SQL scripts run automatically on install and uninstall:
-
-- **`sql/install.php`** — table creation
-- **`sql/uninstall.php`** — table deletion
-
-Both files contain a commented-out example. Uncomment and adapt it for your own tables:
-
-```php
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'awdbcleaner_example` (
-    `id_awdbcleaner_example` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
-    `value` TEXT DEFAULT NULL,
-    `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
-    `date_add` DATETIME NOT NULL,
-    `date_upd` DATETIME NOT NULL,
-    PRIMARY KEY (`id_awdbcleaner_example`),
-    KEY `active` (`active`)
-) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+```cron
+0 3 1 * * cd /var/www/html && php bin/console prestashop:awdbcleaner:clean >> /var/log/awdbcleaner.log 2>&1
 ```
 
-If your module does not need a dedicated table, leave the arrays empty — the scripts will simply return `true`.
+Or with a specific PHP version:
 
----
-
-### Front-office assets
-
-The hook `actionFrontControllerSetMedia` loads a CSS and a JS file on every front-office page:
-
-- `views/css/awdbcleaner.css`
-- `views/js/awdbcleaner.js`
-
-Remove the hook registration in `install()` and delete `hookActionFrontControllerSetMedia()` if no front-office assets are needed.
-
----
-
-### Back-office assets
-
-Admin CSS and JS are loaded directly from the Twig template (`views/templates/admin/form.html.twig`) via the `stylesheets` and `javascripts` blocks:
-
-- `views/css/admin/form.css`
-- `views/js/admin/form.js`
-
----
-
-### Symfony services (DI)
-
-Services are declared in `config/services.yml`. The namespace prefix used throughout is `axelweb.awdbcleaner.*`. Update all service IDs when renaming the module.
-
----
-
-### Symfony routes
-
-Routes are defined in `config/routes.yml`:
-
-| Route name | Path | Controller |
-|---|---|---|
-| `awdbcleaner_index` | `/awdbcleaner/index` | `AwDbCleanerController::index` |
-| `awdbcleaner_form_configuration` | `/awdbcleaner/configuration` | `AdminConfigurationController::index` |
-
-The `_legacy_controller` and `_legacy_link` keys are required for the tab system to work correctly.
-
----
-
-### Translation
-
-The module uses PrestaShop's new translation system (`isUsingNewTranslationSystem()` returns `true`). The translation domain is `Modules.Awdbcleaner.Admin`.
-
----
-
-### Symfony cache
-
-The Symfony cache is cleared automatically after a successful install (`Tools::clearSf2Cache()`) to avoid route-not-found errors.
-
----
-
-## Project structure
-
-```
-awdbcleaner/
-├── awdbcleaner.php          # Main module class
-├── composer.json
-├── config/
-│   ├── routes.yml            # Symfony routes
-│   └── services.yml          # Symfony DI services
-├── sql/
-│   ├── install.php           # Table creation
-│   └── uninstall.php         # Table deletion
-├── src/
-│   ├── Controller/
-│   │   ├── AdminConfigurationController.php
-│   │   └── AwDbCleanerController.php
-│   └── Form/
-│       ├── GeneralDataConfiguration.php
-│       ├── GeneralFormDataProvider.php
-│       └── GeneralFormType.php
-├── vendor/                   # Composer dependencies
-└── views/
-    ├── css/
-    │   ├── admin/form.css
-    │   └── awdbcleaner.css
-    ├── js/
-    │   ├── admin/form.js
-    │   └── awdbcleaner.js
-    └── templates/
-        └── admin/
-            ├── awdbcleaner.html.twig
-            └── form.html.twig
+```cron
+0 3 1 * * cd /var/www/html && /usr/bin/php8.2 bin/console prestashop:awdbcleaner:clean >> /var/log/awdbcleaner.log 2>&1
 ```
 
----
-
-## TODO
-
-- [X] Replace all header stamp
-- [X] Remove smartpack reference
-
----
+Adjust `/var/www/html` to your PrestaShop root directory.
 
 ## License
 
