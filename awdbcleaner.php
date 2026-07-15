@@ -19,9 +19,7 @@ class AwDbCleaner extends Module
         $this->tab = 'administration';
         $this->version = '1.0.0';
         $this->author = 'Axelweb';
-        $this->need_instance = 1;
-
-        $this->bootstrap = true;
+        $this->need_instance = 0;
 
         parent::__construct();
 
@@ -47,9 +45,7 @@ class AwDbCleaner extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        $installed = parent::install()
-            && $this->registerHook('actionFrontControllerSetMedia')
-            && Configuration::updateValue('AWDBCLEANER_SAMPLE_CONFIG', '');
+        $installed = parent::install();
 
         // Prevent 'Unable to generate a URL for the named route [...]' error,
         // clear Symfony cache
@@ -62,8 +58,7 @@ class AwDbCleaner extends Module
 
     public function uninstall(): bool
     {
-        return parent::uninstall()
-            && Configuration::deleteByName('AWDBCLEANER_SAMPLE_CONFIG');
+        return parent::uninstall();
     }
 
     /**
@@ -75,29 +70,5 @@ class AwDbCleaner extends Module
     {
         $route = $this->get('router')->generate('awdbcleaner_form_configuration');
         Tools::redirectAdmin($route);
-    }
-
-    /**
-     * Hook to register CSS and JS on front-office pages
-     */
-    public function hookActionFrontControllerSetMedia()
-    {
-        $this->context->controller->registerStylesheet(
-            'module-awdbcleaner-style',
-            'modules/' . $this->name . '/views/css/awdbcleaner.css',
-            [
-                'media' => 'all',
-                'priority' => 200,
-            ]
-        );
-
-        $this->context->controller->registerJavascript(
-            'module-awdbcleaner-script',
-            'modules/' . $this->name . '/views/js/awdbcleaner.js',
-            [
-                'position' => 'bottom',
-                'priority' => 200,
-            ]
-        );
     }
 }
