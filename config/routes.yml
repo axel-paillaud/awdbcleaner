@@ -1,17 +1,17 @@
-awmodulebase_index:
-  path: /awmodulebase/index
+awdbcleaner_index:
+  path: /awdbcleaner/index
   methods: [GET]
   defaults:
-    _controller: 'Axelweb\AwModuleBase\Controller\AwModuleBaseController::index'
+    _controller: 'Axelweb\AwDbCleaner\Controller\AwDbCleanerController::index'
     # Needed to work with tab system
-    _legacy_controller: AwModuleBase
-    _legacy_link: AwModuleBase
+    _legacy_controller: AwDbCleaner
+    _legacy_link: AwDbCleaner
 
-awmodulebase_form_configuration:
-  path: /awmodulebase/configuration
+awdbcleaner_form_configuration:
+  path: /awdbcleaner/configuration
   methods: [GET, POST]
   defaults:
-    _controller: 'Axelweb\AwModuleBase\Controller\AdminConfigurationController::index'
+    _controller: 'Axelweb\AwDbCleaner\Controller\AdminConfigurationController::index'
     # Needed to work with tab system
-    _legacy_controller: AdminAwModuleBase
-    _legacy_link: AdminAwModuleBase
+    _legacy_controller: AdminAwDbCleaner
+    _legacy_link: AdminAwDbCleaner
