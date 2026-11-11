@@ -1,0 +1,99 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set descriptions = {
+  'connections': 'Visitor connections'|trans({}, 'Modules.Awdbcleaner.Admin'),
+  'connections_source': 'Traffic source of each connection'|trans({}, 'Modules.Awdbcleaner.Admin'),
+  'guest': 'Visitor tracking (browser, OS, screen…)'|trans({}, 'Modules.Awdbcleaner.Admin'),
+  'page_viewed': 'Page view statistics'|trans({}, 'Modules.Awdbcleaner.Admin'),
+  'pagenotfound': '404 errors log'|trans({}, 'Modules.Awdbcleaner.Admin'),
+} %}
+{% set console = 'php bin/console -e prod ' ~ command %}
+
+{% block content %}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">delete_sweep</i> {{ 'Statistics tables'|trans({}, 'Modules.Awdbcleaner.Admin') }}
+    </h3>
+    <div class="card-body">
+      <p>
+        {{ 'These tables only feed the statistics modules and grow continuously. Emptying them frees space and speeds up the database, but deletes the visit history.'|trans({}, 'Modules.Awdbcleaner.Admin') }}
+      </p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'Table'|trans({}, 'Modules.Awdbcleaner.Admin') }}</th>
+            <th>{{ 'Content'|trans({}, 'Modules.Awdbcleaner.Admin') }}</th>
+            <th class="text-right">{{ 'Rows'|trans({}, 'Modules.Awdbcleaner.Admin') }}</th>
+            <th class="text-right">{{ 'Size'|trans({}, 'Modules.Awdbcleaner.Admin') }}</th>
+            {% if canClean %}<th></th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for name, stat in stats %}
+            <tr>
+              <td><code>{{ stat.table }}</code></td>
+              <td>{{ descriptions[name] ?? '' }}</td>
+              {% if stat.exists %}
+                <td class="text-right">{{ stat.rows|number_format(0, ',', ' ') }}</td>
+                <td class="text-right">≈ {{ (stat.size / 1048576)|number_format(1, ',', ' ') }} MB</td>
+              {% else %}
+                <td class="text-right text-muted" colspan="2">{{ 'Table not found'|trans({}, 'Modules.Awdbcleaner.Admin') }}</td>
+              {% endif %}
+              {% if canClean %}
+                <td class="text-right">
+                  {% if stat.exists %}
+                    <form method="post" action="{{ path('awdbcleaner_clean') }}" class="d-inline"
+                          onsubmit="return confirm('{{ 'Empty the table %table%? This cannot be undone.'|trans({'%table%': stat.table}, 'Modules.Awdbcleaner.Admin')|e('js') }}');">
+                      <input type="hidden" name="table" value="{{ name }}">
+                      <button type="submit" class="btn btn-sm btn-outline-danger"{% if stat.rows == 0 %} disabled{% endif %}>
+                        {{ 'Empty'|trans({}, 'Modules.Awdbcleaner.Admin') }}
+                      </button>
+                    </form>
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if canClean %}
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <form method="post" action="{{ path('awdbcleaner_clean') }}"
+                onsubmit="return confirm('{{ 'Empty all the statistics tables? This cannot be undone.'|trans({}, 'Modules.Awdbcleaner.Admin')|e('js') }}');">
+            <input type="hidden" name="table" value="all">
+            <button type="submit" class="btn btn-danger">
+              <i class="material-icons">delete_sweep</i> {{ 'Empty all tables'|trans({}, 'Modules.Awdbcleaner.Admin') }}
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">code</i> {{ 'Command line'|trans({}, 'Modules.Awdbcleaner.Admin') }}
+    </h3>
+    <div class="card-body">
+      <p>{{ 'Run from the PrestaShop root directory:'|trans({}, 'Modules.Awdbcleaner.Admin') }} <code>{{ psRootDir }}</code></p>
+
+      <p class="mb-1"><strong>{{ 'Empty all the tables above'|trans({}, 'Modules.Awdbcleaner.Admin') }}</strong></p>
+      <pre class="bg-light p-2 border rounded"><code>{{ console }}</code></pre>
+
+      <p class="mb-1"><strong>{{ 'Dry run: show what would be emptied, without deleting anything'|trans({}, 'Modules.Awdbcleaner.Admin') }}</strong></p>
+      <pre class="bg-light p-2 border rounded"><code>{{ console }} --dry-run</code></pre>
+
+      <p class="mb-1"><strong>{{ 'Empty only some tables (comma-separated, without prefix)'|trans({}, 'Modules.Awdbcleaner.Admin') }}</strong></p>
+      <pre class="bg-light p-2 border rounded"><code>{{ console }} --tables=connections,guest</code></pre>
+
+      <p class="mb-1"><strong>{{ 'Cron: every 1st of the month at 3:00'|trans({}, 'Modules.Awdbcleaner.Admin') }}</strong></p>
+      <pre class="bg-light p-2 border rounded"><code>0 3 1 * * cd {{ psRootDir }} && {{ console }} >> var/logs/awdbcleaner.log 2>&1</code></pre>
+
+      <p class="text-muted mb-0">
+        {{ 'Default tables:'|trans({}, 'Modules.Awdbcleaner.Admin') }} <code>{{ defaultTables }}</code>.
+      </p>
+    </div>
+  </div>
+{% endblock %}

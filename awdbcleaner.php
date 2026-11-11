@@ -17,7 +17,7 @@ class AwDbCleaner extends Module
     {
         $this->name = 'awdbcleaner';
         $this->tab = 'administration';
-        $this->version = '1.0.0';
+        $this->version = '1.1.0';
         $this->author = 'Axelweb';
         $this->need_instance = 0;
 
@@ -56,19 +56,12 @@ class AwDbCleaner extends Module
         return $installed;
     }
 
-    public function uninstall(): bool
-    {
-        return parent::uninstall();
-    }
-
     /**
      * Redirect to the module symfony configuration page
-     *
-     * @return void
      */
     public function getContent(): void
     {
-        $route = $this->get('router')->generate('awdbcleaner_form_configuration');
+        $route = $this->get('router')->generate('awdbcleaner_configuration');
         Tools::redirectAdmin($route);
     }
 }

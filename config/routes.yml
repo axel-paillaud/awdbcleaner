@@ -1,17 +1,16 @@
-awdbcleaner_index:
-  path: /awdbcleaner/index
+# _legacy_controller must match the tab class_name (AdminAwDbCleaner, created
+# by PrestaShop from these routes at install): it carries the access rights.
+awdbcleaner_configuration:
+  path: /awdbcleaner/configuration
   methods: [GET]
   defaults:
-    _controller: 'Axelweb\AwDbCleaner\Controller\AwDbCleanerController::index'
-    # Needed to work with tab system
-    _legacy_controller: AwDbCleaner
-    _legacy_link: AwDbCleaner
-
-awdbcleaner_form_configuration:
-  path: /awdbcleaner/configuration
-  methods: [GET, POST]
-  defaults:
     _controller: 'Axelweb\AwDbCleaner\Controller\AdminConfigurationController::index'
-    # Needed to work with tab system
     _legacy_controller: AdminAwDbCleaner
     _legacy_link: AdminAwDbCleaner
+
+awdbcleaner_clean:
+  path: /awdbcleaner/clean
+  methods: [POST]
+  defaults:
+    _controller: 'Axelweb\AwDbCleaner\Controller\AdminConfigurationController::clean'
+    _legacy_controller: AdminAwDbCleaner

@@ -1,13 +1,13 @@
 # DB Cleaner (awdbcleaner)
 
-A PrestaShop 8 module that truncates statistics tables via a Symfony CLI command, by [Axelweb](https://axelweb.fr).
+A PrestaShop 8 and 9 module that truncates statistics tables, from the back office or with a Symfony CLI command, by [Axelweb](https://axelweb.fr).
 
-Over time, tables like `ps_connections`, `ps_guest` and `ps_page_viewed` can grow to millions of rows, slowing down the database. This module provides a single console command to clean them up.
+Over time, tables like `ps_connections`, `ps_guest` and `ps_page_viewed` can grow to millions of rows, slowing down the database. This module empties them from its back office page (one button per table, or all at once) or with a console command.
 
 ## Requirements
 
-- PrestaShop 8.0+
-- PHP 8.1+
+- PrestaShop 8.0 to 9.x (the same code runs on both)
+- PHP supported by your PrestaShop version (7.2+ on PS 8, 8.1+ on PS 9)
 - Composer
 
 ## Installation
@@ -16,20 +16,28 @@ Over time, tables like `ps_connections`, `ps_guest` and `ps_page_viewed` can gro
 2. Run `composer install` in the module directory.
 3. Install the module from the PrestaShop back-office.
 
+## Back office
+
+*Modules > Module Manager > DB Cleaner > Configure* shows each table with its row count and size, an *Empty* button per table and an *Empty all tables* button (with a confirmation). It also lists the CLI commands below, with the shop root path.
+
+Access follows the permissions of the hidden `AdminAwDbCleaner` tab (*Advanced Parameters > Team > Permissions*): *read* to see the page, *edit* to empty tables.
+
 ## CLI usage
+
+Use `-e prod`: the default `dev` environment needs dev dependencies that a production install does not ship.
 
 ```bash
 # Truncate all default tables
-php bin/console prestashop:awdbcleaner:clean
+php bin/console -e prod prestashop:awdbcleaner:clean
 
 # Dry run — see what would be truncated without executing
-php bin/console prestashop:awdbcleaner:clean --dry-run
+php bin/console -e prod prestashop:awdbcleaner:clean --dry-run
 
-# Truncate only specific tables (without prefix)
-php bin/console prestashop:awdbcleaner:clean --tables=connections,guest
+# Truncate only specific tables (without prefix, must exist)
+php bin/console -e prod prestashop:awdbcleaner:clean --tables=connections,guest
 
 # Combine options
-php bin/console prestashop:awdbcleaner:clean --tables=connections,connections_source --dry-run
+php bin/console -e prod prestashop:awdbcleaner:clean --tables=connections,connections_source --dry-run
 ```
 
 ### Default tables
@@ -47,7 +55,7 @@ php bin/console prestashop:awdbcleaner:clean --tables=connections,connections_so
 Schedule the command to run monthly (e.g. 1st of each month at 3:00 AM):
 
 ```cron
-0 3 1 * * cd /var/www/html && php bin/console prestashop:awdbcleaner:clean >> /var/log/awdbcleaner.log 2>&1
+0 3 1 * * cd /var/www/html && php bin/console -e prod prestashop:awdbcleaner:clean >> /var/log/awdbcleaner.log 2>&1
 ```
 
 Or with a specific PHP version:

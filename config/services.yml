@@ -1,35 +1,13 @@
+# Loaded by the back office and console containers (PrestaShop 8 and 9).
 services:
   _defaults:
-    public: true
+    public: false
 
-  # General form type
-  axelweb.awdbcleaner.form.type.general:
-    class: 'Axelweb\AwDbCleaner\Form\GeneralFormType'
-    parent: 'form.type.translatable.aware'
-    public: true
-    tags:
-      - { name: form.type }
+  Axelweb\AwDbCleaner\Service\TableCleaner: ~
 
-  axelweb.awdbcleaner.form.general_data_configuration:
-    class: 'Axelweb\AwDbCleaner\Form\GeneralDataConfiguration'
-    arguments: ['@prestashop.adapter.legacy.configuration']
-
-  axelweb.awdbcleaner.form.general_form_data_provider:
-    class: 'Axelweb\AwDbCleaner\Form\GeneralFormDataProvider'
+  # Command name also given in the tag for lazy loading (Symfony 4.4 and 6.4)
+  Axelweb\AwDbCleaner\Command\CleanDatabaseCommand:
     arguments:
-      - '@axelweb.awdbcleaner.form.general_data_configuration'
-
-  axelweb.awdbcleaner.form.general_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-    arguments:
-      - '@form.factory'
-      - '@prestashop.core.hook.dispatcher'
-      - '@axelweb.awdbcleaner.form.general_form_data_provider'
-      - 'Axelweb\AwDbCleaner\Form\GeneralFormType'
-      - 'AwDbCleaner'
-
-  # CLI command
-  axelweb.awdbcleaner.command.clean_database:
-    class: 'Axelweb\AwDbCleaner\Command\CleanDatabaseCommand'
+      - '@Axelweb\AwDbCleaner\Service\TableCleaner'
     tags:
-      - { name: console.command }
+      - { name: console.command, command: 'prestashop:awdbcleaner:clean' }

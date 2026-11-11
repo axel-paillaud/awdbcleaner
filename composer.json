@@ -1,6 +1,6 @@
 {
   "name": "axelweb/awdbcleaner",
-  "description": "PrestaShop module base template for development",
+  "description": "Truncates PrestaShop statistics tables (CLI command and back office page)",
   "type": "prestashop-module",
   "license": "AFL-3.0",
   "authors": [
@@ -15,7 +15,7 @@
     }
   },
   "require": {
-    "php": ">=7.1"
+    "php": ">=7.2"
   },
   "config": {
     "prepend-autoloader": false,

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="ModulesAwdbcleanerAdmin.xlf" source-language="fr-FR" target-language="fr-FR" datatype="plaintext">
+    <body>
+      <trans-unit id="9c483d8395bebf611a13ee272b08f4ca">
+        <source>404 errors log</source>
+        <target>Journal des erreurs 404</target>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Êtes-vous sûr de vouloir désinstaller ce module ?</target>
+      </trans-unit>
+      <trans-unit id="760fbdfafca0cf0cfd2502103679fc22">
+        <source>Command line</source>
+        <target>Ligne de commande</target>
+      </trans-unit>
+      <trans-unit id="f15c1cae7882448b3fb0404682e17e61">
+        <source>Content</source>
+        <target>Contenu</target>
+      </trans-unit>
+      <trans-unit id="aa0dddeea224f60932a3b64336b383b8">
+        <source>Cron: every 1st of the month at 3:00</source>
+        <target>Cron : le 1er de chaque mois à 3 h</target>
+      </trans-unit>
+      <trans-unit id="e7640a74b469f11deb9ee43512af02f8">
+        <source>DB Cleaner</source>
+        <target>DB Cleaner</target>
+      </trans-unit>
+      <trans-unit id="57b0a51ca2429365ceddda48ef7e363b">
+        <source>Default tables:</source>
+        <target>Tables par défaut :</target>
+      </trans-unit>
+      <trans-unit id="a62ac82050d8354e5eaeae2d64626186">
+        <source>Dry run: show what would be emptied, without deleting anything</source>
+        <target>Simulation : affiche ce qui serait vidé, sans rien supprimer</target>
+      </trans-unit>
+      <trans-unit id="eca6b18dbbd509dcad883205506bf05c">
+        <source>Emptied: %tables% (%rows% rows deleted).</source>
+        <target>Vidé : %tables% (%rows% lignes supprimées).</target>
+      </trans-unit>
+      <trans-unit id="ce2c8aed9c2fa0cfbed56cbda4d8bf07">
+        <source>Empty</source>
+        <target>Vider</target>
+      </trans-unit>
+      <trans-unit id="ec2bfe568006ec91a67419f0dff22a1f">
+        <source>Empty all tables</source>
+        <target>Vider toutes les tables</target>
+      </trans-unit>
+      <trans-unit id="c71a41d2a7a0bf20fa81bade9b767c6a">
+        <source>Empty all the statistics tables? This cannot be undone.</source>
+        <target>Vider toutes les tables de statistiques ? Cette action est irréversible.</target>
+      </trans-unit>
+      <trans-unit id="79f22fe9abf83ccafa4899a494afd61d">
+        <source>Empty all the tables above</source>
+        <target>Vider toutes les tables ci-dessus</target>
+      </trans-unit>
+      <trans-unit id="ac3d28b97dade987a17e4215d8d8261a">
+        <source>Empty only some tables (comma-separated, without prefix)</source>
+        <target>Vider seulement certaines tables (séparées par des virgules, sans préfixe)</target>
+      </trans-unit>
+      <trans-unit id="4001b6cd372a69ab9712ed0e265cc986">
+        <source>Empty the table %table%? This cannot be undone.</source>
+        <target>Vider la table %table% ? Cette action est irréversible.</target>
+      </trans-unit>
+      <trans-unit id="2085019e82bf770a8411d50da7815c1e">
+        <source>Page view statistics</source>
+        <target>Statistiques des pages vues</target>
+      </trans-unit>
+      <trans-unit id="a12487cec42ca08901febb891124cb20">
+        <source>Periodically truncates statistics tables (connections, guests, page views, 404 pages) via a Symfony CLI command.</source>
+        <target>Vide périodiquement les tables de statistiques (connexions, visiteurs, pages vues, pages 404) via une commande Symfony CLI.</target>
+      </trans-unit>
+      <trans-unit id="530f488f7a9800411efc6926ab189708">
+        <source>Rows</source>
+        <target>Lignes</target>
+      </trans-unit>
+      <trans-unit id="0e2c1cc5827fe88fc50519142cb647e3">
+        <source>Run from the PrestaShop root directory:</source>
+        <target>À lancer depuis le dossier racine de PrestaShop :</target>
+      </trans-unit>
+      <trans-unit id="6f6cb72d544962fa333e2e34ce64f719">
+        <source>Size</source>
+        <target>Taille</target>
+      </trans-unit>
+      <trans-unit id="9bba9a46e2a17e8c3066343c07998f26">
+        <source>Statistics tables</source>
+        <target>Tables de statistiques</target>
+      </trans-unit>
+      <trans-unit id="51c45b795d5d18a3e4e0c37e8b20a141">
+        <source>Table</source>
+        <target>Table</target>
+      </trans-unit>
+      <trans-unit id="547cb1229e30bd65fe556bf368627481">
+        <source>Table not found</source>
+        <target>Table introuvable</target>
+      </trans-unit>
+      <trans-unit id="512473668a502677643b66382a435e54">
+        <source>These tables only feed the statistics modules and grow continuously. Emptying them frees space and speeds up the database, but deletes the visit history.</source>
+        <target>Ces tables servent uniquement aux modules de statistiques et grossissent en continu. Les vider libère de la place et accélère la base de données, mais supprime l’historique des visites.</target>
+      </trans-unit>
+      <trans-unit id="45ebc115edf7280df98e6d770280d797">
+        <source>Traffic source of each connection</source>
+        <target>Source de trafic de chaque connexion</target>
+      </trans-unit>
+      <trans-unit id="ac26456fdec562dc8b13ebb51a6a2c3f">
+        <source>Unknown table.</source>
+        <target>Table inconnue.</target>
+      </trans-unit>
+      <trans-unit id="c45b3d15ef532d7ce44f0349355aa54e">
+        <source>Visitor connections</source>
+        <target>Connexions des visiteurs</target>
+      </trans-unit>
+      <trans-unit id="5d65722f193042c789b0cdb523918365">
+        <source>Visitor tracking (browser, OS, screen…)</source>
+        <target>Suivi des visiteurs (navigateur, OS, écran…)</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
